@@ -7,6 +7,8 @@ package automatastarter;
 
 import utils.CardSwitcher;
 import utils.ImageUtil;
+import automatastarter.PredPrey;
+import static automatastarter.PredPrey.grid;
 import java.awt.Graphics;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -25,6 +27,7 @@ import javax.swing.Action;
 import javax.swing.JPanel;
 import javax.swing.KeyStroke;
 import javax.swing.Timer;
+import automatastarter.FrameForGame;
 
 /**
  *
@@ -33,6 +36,8 @@ import javax.swing.Timer;
 public class GamePanel extends javax.swing.JPanel implements MouseListener {
 
     public static final String CARD_NAME = "game";
+    
+    
 
     CardSwitcher switcher; // This is the parent panel
     Timer animTimer;
@@ -43,6 +48,7 @@ public class GamePanel extends javax.swing.JPanel implements MouseListener {
     int y = 10;
     int xdir = 5;
     int lineX = 0;
+    
 
     /**
      * Creates new form GamePanel
@@ -51,7 +57,6 @@ public class GamePanel extends javax.swing.JPanel implements MouseListener {
         initComponents();
 
         img1 = ImageUtil.loadAndResizeImage("yourFile.jpg", 300, 300);//, WIDTH, HEIGHT)//ImageIO.read(new File("yourFile.jpg"));
-
         this.setFocusable(true);
 
         // tell the program we want to listen to the mouse
@@ -59,11 +64,12 @@ public class GamePanel extends javax.swing.JPanel implements MouseListener {
         //tells us the panel that controls this one
         switcher = p;
         //create and start a Timer for animation
-        animTimer = new Timer(10, new AnimTimerTick());
+        animTimer = new Timer(1000, new AnimTimerTick());
         animTimer.start();
 
         //set up the key bindings
         setupKeys();
+     
 
     }
 
@@ -88,6 +94,7 @@ public class GamePanel extends javax.swing.JPanel implements MouseListener {
             g.drawImage(img1, x, y, this);
         }
         g.drawLine(lineX, 0, 300, 300);
+        FrameForGame.p.drawGrid(g, this.getWidth(), this.getHeight());
     }
 
     /**
@@ -113,17 +120,17 @@ public class GamePanel extends javax.swing.JPanel implements MouseListener {
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(174, 174, 174)
-                .addComponent(jLabel1)
-                .addContainerGap(199, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(256, Short.MAX_VALUE)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(97, 97, 97))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(135, 135, 135)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(149, Short.MAX_VALUE)
                 .addComponent(jLabel1)
-                .addContainerGap(151, Short.MAX_VALUE))
+                .addGap(137, 137, 137))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -219,6 +226,8 @@ public class GamePanel extends javax.swing.JPanel implements MouseListener {
         public void actionPerformed(ActionEvent ae) {
             //the stuff we want to change every clock tick
             lineX++;
+            grid = FrameForGame.p.movement();
+            FrameForGame.p.printGrid();
             //force redraw
             repaint();
         }
