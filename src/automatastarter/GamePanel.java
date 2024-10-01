@@ -40,14 +40,10 @@ public class GamePanel extends javax.swing.JPanel implements MouseListener {
     
 
     CardSwitcher switcher; // This is the parent panel
-    Timer animTimer;
+    public static Timer animTimer;
     // Image img1 = Toolkit.getDefaultToolkit().getImage("yourFile.jpg");
     BufferedImage img1;
     //variables to control your animation elements
-    int x = 0;
-    int y = 10;
-    int xdir = 5;
-    int lineX = 0;
     
 
     /**
@@ -65,7 +61,6 @@ public class GamePanel extends javax.swing.JPanel implements MouseListener {
         switcher = p;
         //create and start a Timer for animation
         animTimer = new Timer(1000, new AnimTimerTick());
-        animTimer.start();
 
         //set up the key bindings
         setupKeys();
@@ -90,10 +85,7 @@ public class GamePanel extends javax.swing.JPanel implements MouseListener {
 
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        if (img1 != null) {
-            g.drawImage(img1, x, y, this);
-        }
-        g.drawLine(lineX, 0, 300, 300);
+
         FrameForGame.p.drawGrid(g, this.getWidth(), this.getHeight());
     }
 
@@ -106,41 +98,30 @@ public class GamePanel extends javax.swing.JPanel implements MouseListener {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel1 = new javax.swing.JLabel();
-
         addComponentListener(new java.awt.event.ComponentAdapter() {
             public void componentShown(java.awt.event.ComponentEvent evt) {
                 formComponentShown(evt);
             }
         });
 
-        jLabel1.setText("Game");
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(256, Short.MAX_VALUE)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(97, 97, 97))
+            .addGap(0, 404, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(149, Short.MAX_VALUE)
-                .addComponent(jLabel1)
-                .addGap(137, 137, 137))
+            .addGap(0, 302, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
 
     private void formComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentShown
-        lineX = 0;
+
     }//GEN-LAST:event_formComponentShown
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel jLabel1;
     // End of variables declaration//GEN-END:variables
 
     /**
@@ -151,8 +132,8 @@ public class GamePanel extends javax.swing.JPanel implements MouseListener {
      */
     public void mouseClicked(MouseEvent me) {
         System.out.println("Click: " + me.getX() + ":" + me.getY());
-        x = 5;
-        y = 5;
+        FrameForGame.p.updateGrid(me.getX(), me.getY(), this.getWidth(), this.getHeight(), -1);
+
     }
 
     /**
@@ -203,15 +184,7 @@ public class GamePanel extends javax.swing.JPanel implements MouseListener {
         }
 
         public void actionPerformed(ActionEvent ae) {
-            // here you decide what you want to happen if a particular key is pressed
-            System.out.println("llll" + key);
-            switch(key){
-                case "d": x+=2; break;
-                case "x": animTimer.stop(); switcher.switchToCard(EndPanel.CARD_NAME); break;
-            }
-            if (key.equals("d")) {
-                x = x + 2;
-            }
+            
             
         }
 
@@ -225,9 +198,9 @@ public class GamePanel extends javax.swing.JPanel implements MouseListener {
 
         public void actionPerformed(ActionEvent ae) {
             //the stuff we want to change every clock tick
-            lineX++;
+
             grid = FrameForGame.p.movement();
-            FrameForGame.p.printGrid();
+            
             //force redraw
             repaint();
         }

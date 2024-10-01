@@ -21,8 +21,8 @@ public class PredPrey {
      */
     
 //    constants / important vars
-    public static final int GRID_X = 20;
-    public static final int GRID_Y = 20;
+    public static final int GRID_X = 40;
+    public static final int GRID_Y = 40;
     public static int[][] grid = new int[GRID_X][GRID_Y];
     public static final int PREY_REPROD_RATE = 10;
     public static final int PRED_REPROD_RATE = 5;
@@ -121,6 +121,20 @@ public class PredPrey {
         return nPred + nPrey;
     }
     
+    public void updateGrid(int x, int y, int width, int height, int type) {
+        int wInterval = width / grid.length;
+        int hInterval = height / grid[0].length;
+        int row = x/wInterval;
+        int col = y/hInterval;
+        switch (type) {
+            case -1:
+                grid[row][col] = -1;
+                break;
+            default:
+                grid[row][col] = 20;
+        }
+    }
+    
     public void drawGrid(Graphics g, int width, int height) {
         //        counters
         int nPrey = 0;
@@ -130,19 +144,23 @@ public class PredPrey {
         int hInterval = height / grid[0].length;
 //        nested for loop for each value
         for (int row = 0; row < grid.length; row++) {
+            g.setColor(Color.black);
+            g.drawLine(row*wInterval, 0, row*wInterval, height);
             for (int col = 0; col < grid[row].length; col++) {
+                g.setColor(Color.black);
+                g.drawLine(0, col*hInterval, width, col*hInterval);
 //                check whether its empty (0), prey (1), or pred (2)
                 switch (grid[row][col]) {
                     case 0:
                         break;
                     case -1:
                         g.setColor(Color.blue);
-                        g.fillOval(row*wInterval, col*hInterval, 10, 10);
+                        g.fillRect(row*wInterval, col*hInterval, wInterval, hInterval);
                         nPrey++;
                         break;
                     default:
                         g.setColor(Color.red);
-                        g.fillOval(row*wInterval, col*hInterval, 10, 10);
+                        g.fillRect(row*wInterval, col*hInterval, wInterval, hInterval);
                         nPred++;
                         break;
                 }
