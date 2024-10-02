@@ -39,6 +39,7 @@ public class FrameForGame extends javax.swing.JFrame implements CardSwitcher {
     GamePanel gp;
     static PredPrey p = new PredPrey();
     static boolean organismAdd;
+    static int[] organisms = new int[2];
     
 
     /**
@@ -66,12 +67,24 @@ public class FrameForGame extends javax.swing.JFrame implements CardSwitcher {
 //        set up the grid to be empty on open
         p.gridSetUp(false);
         
+        
 //        add radio btns to group and set prey add to true
         radioGroup.add(preyBtn);
         radioGroup.add(predBtn);
         preyBtn.setSelected(true);
     }
-
+    
+    public void setOrganismsLabel() {
+        System.out.println(preyCount.getText());
+        organisms[0] = p.numPrey();
+        organisms[1] = p.numPred();
+        preyCount.setText("Prey: " + organisms[0]);
+        predCount.setText("Pred: " + organisms[1]);
+        System.out.println(preyCount.getText());
+        System.out.println(organisms[0]);
+        repaint();
+    }
+    
     private void addPanels() {
         gp = new GamePanel(this);
         cardPanel.add(gp,GamePanel.CARD_NAME);
@@ -100,6 +113,13 @@ public class FrameForGame extends javax.swing.JFrame implements CardSwitcher {
         predBtn = new javax.swing.JRadioButton();
         organismAddLabel = new javax.swing.JLabel();
         randomize = new javax.swing.JButton();
+        gridXSlider = new javax.swing.JSlider();
+        gridYSlider = new javax.swing.JSlider();
+        gridXLabel = new javax.swing.JLabel();
+        gridYLabel = new javax.swing.JLabel();
+        generationLabel = new javax.swing.JLabel();
+        preyCount = new javax.swing.JLabel();
+        predCount = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -166,40 +186,81 @@ public class FrameForGame extends javax.swing.JFrame implements CardSwitcher {
             }
         });
 
+        gridXSlider.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                gridXSliderStateChanged(evt);
+            }
+        });
+
+        gridYSlider.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                gridYSliderStateChanged(evt);
+            }
+        });
+
+        gridXLabel.setText("X Width");
+
+        gridYLabel.setText("Y Width");
+
+        generationLabel.setText("Generation 0");
+
+        preyCount.setText("Prey: 0");
+
+        predCount.setText("Predator: 0");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(cardPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
-                .addGap(12, 12, 12)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                        .addGap(12, 12, 12)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(6, 6, 6)
-                                .addComponent(speedSlider, javax.swing.GroupLayout.PREFERRED_SIZE, 229, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(70, 70, 70)
-                                .addComponent(preyBtn))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(startBtn)
+                                        .addGap(76, 76, 76)
+                                        .addComponent(stopBtn)
+                                        .addGap(85, 85, 85)
+                                        .addComponent(resetBtn))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(305, 305, 305)
+                                        .addComponent(preyBtn)))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 66, Short.MAX_VALUE)
+                                        .addComponent(randomize))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(49, 49, 49)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(predCount, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addComponent(preyCount, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(startBtn)
-                                .addGap(76, 76, 76)
-                                .addComponent(stopBtn)
-                                .addGap(85, 85, 85)
-                                .addComponent(resetBtn)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 76, Short.MAX_VALUE)
-                        .addComponent(randomize)
-                        .addContainerGap())
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(305, 305, 305)
-                        .addComponent(predBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(speedSliderLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(274, 274, 274)
-                .addComponent(organismAddLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                                .addGap(305, 305, 305)
+                                .addComponent(predBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE))))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(gridYLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(speedSliderLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(gridXLabel))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(speedSlider, javax.swing.GroupLayout.PREFERRED_SIZE, 212, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(56, 56, 56)
+                                .addComponent(organismAddLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(generationLabel))
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(gridYSlider, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 212, Short.MAX_VALUE)
+                                .addComponent(gridXSlider, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
+                .addGap(55, 55, 55))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -213,15 +274,27 @@ public class FrameForGame extends javax.swing.JFrame implements CardSwitcher {
                     .addComponent(randomize))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(organismAddLabel)
-                    .addComponent(speedSliderLabel))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(organismAddLabel)
+                        .addComponent(generationLabel))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(speedSliderLabel)
+                        .addComponent(speedSlider, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(speedSlider, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(preyBtn))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(preyBtn)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(gridXSlider, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(gridXLabel))
+                    .addComponent(preyCount))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(predBtn)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(predBtn)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(gridYSlider, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(gridYLabel))
+                    .addComponent(predCount))
+                .addContainerGap(32, Short.MAX_VALUE))
         );
 
         pack();
@@ -243,6 +316,7 @@ public class FrameForGame extends javax.swing.JFrame implements CardSwitcher {
         GamePanel.animTimer.restart();
         GamePanel.animTimer.stop();
         p.gridSetUp(false);
+        setOrganismsLabel();
         repaint();
     }//GEN-LAST:event_resetBtnActionPerformed
 
@@ -258,8 +332,27 @@ public class FrameForGame extends javax.swing.JFrame implements CardSwitcher {
         GamePanel.animTimer.restart();
         GamePanel.animTimer.stop();
         p.gridSetUp(true);
+        setOrganismsLabel();
         repaint();
     }//GEN-LAST:event_randomizeActionPerformed
+
+    private void gridXSliderStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_gridXSliderStateChanged
+        GamePanel.animTimer.restart();
+        GamePanel.animTimer.stop();
+        p.setGridX(gridXSlider.getValue() / 2);
+        p.gridSetUp(false);
+        setOrganismsLabel();
+        repaint();
+    }//GEN-LAST:event_gridXSliderStateChanged
+
+    private void gridYSliderStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_gridYSliderStateChanged
+        GamePanel.animTimer.restart();
+        GamePanel.animTimer.stop();
+        p.setGridY(gridYSlider.getValue() / 2);
+        setOrganismsLabel();
+        repaint();
+    }//GEN-LAST:event_gridYSliderStateChanged
+    
     
     /**
      * @param args the command line arguments
@@ -303,9 +396,16 @@ public class FrameForGame extends javax.swing.JFrame implements CardSwitcher {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel cardPanel;
+    private javax.swing.JLabel generationLabel;
+    private javax.swing.JLabel gridXLabel;
+    private javax.swing.JSlider gridXSlider;
+    private javax.swing.JLabel gridYLabel;
+    private javax.swing.JSlider gridYSlider;
     private javax.swing.JLabel organismAddLabel;
     private javax.swing.JRadioButton predBtn;
+    private javax.swing.JLabel predCount;
     private javax.swing.JRadioButton preyBtn;
+    private javax.swing.JLabel preyCount;
     private javax.swing.ButtonGroup radioGroup;
     private javax.swing.JButton randomize;
     private javax.swing.JButton resetBtn;

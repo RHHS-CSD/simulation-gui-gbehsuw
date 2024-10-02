@@ -28,6 +28,7 @@ import javax.swing.JPanel;
 import javax.swing.KeyStroke;
 import javax.swing.Timer;
 import automatastarter.FrameForGame;
+import static automatastarter.FrameForGame.organisms;
 
 /**
  *
@@ -37,6 +38,7 @@ public class GamePanel extends javax.swing.JPanel implements MouseListener {
 
     public static final String CARD_NAME = "game";
     
+    static FrameForGame f = new FrameForGame();
     
 
     CardSwitcher switcher; // This is the parent panel
@@ -126,13 +128,15 @@ public class GamePanel extends javax.swing.JPanel implements MouseListener {
     }//GEN-LAST:event_formComponentShown
 
     private void formMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMouseDragged
-        int addType = 0;
+        int addType;
         if (FrameForGame.organismAdd) {
             addType = 20;
         } else {
             addType = -1;
         }
         FrameForGame.p.updateGrid(evt.getX(), evt.getY(), this.getWidth(), this.getHeight(), addType);
+
+        f.setOrganismsLabel();
 //        force redraw again
         repaint();
     }//GEN-LAST:event_formMouseDragged
@@ -155,6 +159,9 @@ public class GamePanel extends javax.swing.JPanel implements MouseListener {
             addType = -1;
         }
         FrameForGame.p.updateGrid(me.getX(), me.getY(), this.getWidth(), this.getHeight(), addType);
+        
+        f.setOrganismsLabel();
+
 //        force redraw again
         repaint();
     }
@@ -219,6 +226,8 @@ public class GamePanel extends javax.swing.JPanel implements MouseListener {
             //the stuff we want to change every clock tick
 
             grid = FrameForGame.p.movement();
+            
+            f.setOrganismsLabel();
             
             //force redraw
             repaint();

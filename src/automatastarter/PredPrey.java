@@ -21,26 +21,60 @@ public class PredPrey {
      */
     
 //    constants / important vars
-    public static final int GRID_X = 40;
-    public static final int GRID_Y = 40;
-    public static int[][] grid = new int[GRID_X][GRID_Y];
+    private static int gridX = 25;
+    private static int gridY = 25;
+    public static int[][] grid = new int[gridX][gridY];
     public static final int PREY_REPROD_RATE = 10;
     public static final int PRED_REPROD_RATE = 5;
     public static final int PRED_HUNGER_VAL = 20;
     public static final int PRED_REPRODUCE_MIN = 10;
     public static final int PRED_DESPERATION = 4;
-    public static int numPrey = 100;
-    public static int numPred = 10;
+    public static int numPrey = 0;
+    public static int numPred = 0;
+    private static final int numPreyStart = 100;
+    private static final int numPredStart = 10;
     private static int stepNumber = 0;
 
+//    getters/setters
+    public void setGridX(int newGridX) {
+        gridX = newGridX;
+        grid = new int[gridX][gridY];
+        gridSetUp(false);
+    }
+    
+    public void setGridY(int newGridY) {
+        gridY = newGridY;
+        grid = new int[gridX][gridY];
+        gridSetUp(false);
+    }
+    
+    public int getGridX() {
+        return gridX;
+    }
+    
+    public int getGridY() {
+        return gridY;
+    }
+    
+    public int numPrey() {
+        return numPrey;
+    }
+    
+    public int numPred() {
+        return numPred;
+    }
     
 //    initialize grid
     public void gridSetUp(boolean populate) {
         for (int row = 0; row < grid.length; row++) {
             Arrays.fill(grid[row], 0);
         }
+        
+        
 //        populate grid
         if (populate) {
+            numPrey = numPreyStart;
+            numPred = numPredStart;
             populatePrey();
             populatePred();
         }
@@ -49,9 +83,9 @@ public class PredPrey {
     
 //    return a copy of the 2d int array
     private static int[][] copyGrid(int [][] grid) {
-        int[][] newGrid = new int[GRID_X][GRID_Y];
+        int[][] newGrid = new int[gridX][gridY];
         for (int i = 0; i < newGrid.length; i++) {
-            System.arraycopy(grid[i], 0, newGrid[i], 0, GRID_Y);
+            System.arraycopy(grid[i], 0, newGrid[i], 0, gridY);
         }
         
         return newGrid;
@@ -64,8 +98,8 @@ public class PredPrey {
             boolean valid = false;
             while (!valid) {
 //                randomly generate a cord
-                int x = r.nextInt(GRID_X);
-                int y = r.nextInt(GRID_Y);
+                int x = r.nextInt(gridX);
+                int y = r.nextInt(gridY);
                 
 //                make sure cord is empty
                 if (grid[x][y] == 0) {
@@ -83,8 +117,8 @@ public class PredPrey {
             boolean valid = false;
             while (!valid) {
 //                random generate a cord
-                int x = r.nextInt(GRID_X);
-                int y = r.nextInt(GRID_Y);
+                int x = r.nextInt(gridX);
+                int y = r.nextInt(gridY);
                 
 //                make sure cord is empty
                 if (grid[x][y] == 0) {
@@ -129,6 +163,7 @@ public class PredPrey {
         int hInterval = height / grid[0].length;
         int row = x/wInterval;
         int col = y/hInterval;
+        
 //        Make sure click is on the grid
         if (row < grid.length && col < grid[0].length) {
 //            update vals
@@ -139,6 +174,7 @@ public class PredPrey {
                     } else {
                         grid[row][col] = -1;
                     }
+                    numPrey++;
                     break;
                 case 20:
                     if (grid[row][col] > 1) {
@@ -146,6 +182,7 @@ public class PredPrey {
                     } else {
                         grid[row][col] = 20;
                     }
+                    numPred++;
                     break;
             }
         }
@@ -153,8 +190,8 @@ public class PredPrey {
     
     public void drawGrid(Graphics g, int width, int height) {
         //        counters
-        int nPrey = 0;
-        int nPred = 0;
+        numPrey = 0;
+        numPred = 0;
         
         int wInterval = width / grid.length;
         int hInterval = height / grid[0].length;
@@ -172,12 +209,12 @@ public class PredPrey {
                     case -1:
                         g.setColor(Color.blue);
                         g.fillRect(row*wInterval, col*hInterval, wInterval, hInterval);
-                        nPrey++;
+                        numPrey++;
                         break;
                     default:
                         g.setColor(Color.red);
                         g.fillRect(row*wInterval, col*hInterval, wInterval, hInterval);
-                        nPred++;
+                        numPred++;
                         break;
                 }
             }
@@ -186,9 +223,9 @@ public class PredPrey {
     }
     
 //    count the number of steps
-    private void step() {
+    private int step() {
         stepNumber++;
-        System.out.println("Step: " + stepNumber);
+        return stepNumber;
     }
     
 //    overall movement
@@ -261,8 +298,8 @@ public class PredPrey {
 
 //         Check surrounding spaces
         for (int i = 0; i < 4; i++) {
-            int newRow = (x + dRow[i] + GRID_X) % GRID_X;
-            int newCol = (y + dCol[i] + GRID_Y) % GRID_Y;
+            int newRow = (x + dRow[i] + gridX) % gridX;
+            int newCol = (y + dCol[i] + gridY) % gridY;
 
 //             Check for predators in adjacent cells
             if (newGrid[newRow][newCol] > 0) {
@@ -279,8 +316,8 @@ public class PredPrey {
         // Move away from predators
         if (predatorNearby) {
             for (int i = 0; i < 4; i++) {
-                int newRow = (x - dRow[i] + GRID_X) % GRID_X;
-                int newCol = (y - dCol[i] + GRID_Y) % GRID_Y;
+                int newRow = (x - dRow[i] + gridX) % gridX;
+                int newCol = (y - dCol[i] + gridY) % gridY;
                 if (newGrid[newRow][newCol] == 0) {
                     predatorFreeSpaces.add(new int[]{newRow, newCol});
                 }
@@ -480,8 +517,8 @@ public class PredPrey {
         ArrayList<int[]> openSpots = new ArrayList<>();
         
         for (int i = 0; i < 4; i++) {
-            int newRow = (x + dRow[i] + GRID_X) % GRID_X;
-            int newCol = (y + dCol[i] + GRID_Y) % GRID_Y;
+            int newRow = (x + dRow[i] + gridX) % gridX;
+            int newCol = (y + dCol[i] + gridY) % gridY;
 //            Empty nearby cell
             if (grid[newRow][newCol] == 0) {
                 openSpots.add(new int[]{newRow, newCol});
