@@ -35,14 +35,17 @@ public class PredPrey {
 
     
 //    initialize grid
-    public void gridSetUp() {
+    public void gridSetUp(boolean populate) {
         for (int row = 0; row < grid.length; row++) {
             Arrays.fill(grid[row], 0);
         }
 //        populate grid
-        populatePrey();
-        populatePred();
+        if (populate) {
+            populatePrey();
+            populatePred();
+        }
     }
+    
     
 //    return a copy of the 2d int array
     private static int[][] copyGrid(int [][] grid) {
@@ -99,7 +102,7 @@ public class PredPrey {
 //        nested for loop for each value
         for (int row = 0; row < grid.length; row++) {
             for (int col = 0; col < grid[row].length; col++) {
-//                check whether its empty (0), prey (1), or pred (2)
+//                check whether its empty (0), prey (-1), or pred (1+)
                 switch (grid[row][col]) {
                     case 0: 
                         System.out.print(". ");
@@ -126,12 +129,25 @@ public class PredPrey {
         int hInterval = height / grid[0].length;
         int row = x/wInterval;
         int col = y/hInterval;
-        switch (type) {
-            case -1:
-                grid[row][col] = -1;
-                break;
-            default:
-                grid[row][col] = 20;
+//        Make sure click is on the grid
+        if (row < grid.length && col < grid[0].length) {
+//            update vals
+            switch (type) {
+                case -1:
+                    if (grid[row][col] == -1) {
+                        grid[row][col] = 0;
+                    } else {
+                        grid[row][col] = -1;
+                    }
+                    break;
+                case 20:
+                    if (grid[row][col] > 1) {
+                        grid[row][col] = 0;
+                    } else {
+                        grid[row][col] = 20;
+                    }
+                    break;
+            }
         }
     }
     
@@ -145,10 +161,10 @@ public class PredPrey {
 //        nested for loop for each value
         for (int row = 0; row < grid.length; row++) {
             g.setColor(Color.black);
-            g.drawLine(row*wInterval, 0, row*wInterval, height);
+            g.drawLine(row*wInterval, 0, row*wInterval, grid[0].length*hInterval);
             for (int col = 0; col < grid[row].length; col++) {
                 g.setColor(Color.black);
-                g.drawLine(0, col*hInterval, width, col*hInterval);
+                g.drawLine(0, col*hInterval, grid.length*wInterval, col*hInterval);
 //                check whether its empty (0), prey (1), or pred (2)
                 switch (grid[row][col]) {
                     case 0:
@@ -224,45 +240,75 @@ public class PredPrey {
 //    prey movement
 
     /**
-     * The prey will randomly move to another location that is empty.
+     * The prey will move away from a predator, towards other nearby prey
+     * or towards a random empty space
      * @param x, x location of the prey
      * @param y, y location of the prey
      * @param newGrid, the new grid with updated positions
      * @return the new updated grid
      */
     public static int[][] preyMovement(int x, int y, int[][] newGrid) {
-        int[] dRow = {-1, 1, 0, 0}; // Direction row changes: up, down
-        int[] dCol = {0, 0, -1, 1}; // Direction column changes: left, right
-        ArrayList<int[]> emptySpaces = new ArrayList<>();
+//     Make sure space is prey
+    if (newGrid[x][y] == -1) {
+        Random r = new Random();
+        int[] dRow = {-1, 1, 0, 0};
+        int [] dCol = {0, 0, -1, 1};
+//         Possible valid moves
+        ArrayList<int[]> predatorFreeSpaces = new ArrayList<>();
+        ArrayList<int[]> preyGroupSpaces = new ArrayList<>();
 
-        // Look for empty spaces around the prey
+        boolean predatorNearby = false;
+
+//         Check surrounding spaces
         for (int i = 0; i < 4; i++) {
-            int newRow = (x + dRow[i] + newGrid.length) % newGrid.length; // Wrap vertically
-            int newCol = (y + dCol[i] + newGrid[0].length) % newGrid[0].length; // Wrap horizontally
+            int newRow = (x + dRow[i] + GRID_X) % GRID_X;
+            int newCol = (y + dCol[i] + GRID_Y) % GRID_Y;
 
-            if (newGrid[newRow][newCol] == 0) {
-                emptySpaces.add(new int[]{newRow, newCol});
+//             Check for predators in adjacent cells
+            if (newGrid[newRow][newCol] > 0) {
+                predatorNearby = true;
+            } else if (newGrid[newRow][newCol] == -1) {
+//                 If there are other prey nearby, group towards
+                preyGroupSpaces.add(new int[]{newRow, newCol});
+            } else {
+//                 Empty space with no predator
+                predatorFreeSpaces.add(new int[]{newRow, newCol});
             }
         }
 
-        if (!emptySpaces.isEmpty() && newGrid[x][y] == -1) {
-            // Randomly select an empty space to move into
-            Random rand = new Random();
-            int[] moveTo = emptySpaces.get(rand.nextInt(emptySpaces.size()));
+        // Move away from predators
+        if (predatorNearby) {
+            for (int i = 0; i < 4; i++) {
+                int newRow = (x - dRow[i] + GRID_X) % GRID_X;
+                int newCol = (y - dCol[i] + GRID_Y) % GRID_Y;
+                if (newGrid[newRow][newCol] == 0) {
+                    predatorFreeSpaces.add(new int[]{newRow, newCol});
+                }
+            }
+        }
 
-            // Move the prey to the new location
+        // Move to the farthest predator-free space
+        if (!predatorFreeSpaces.isEmpty()) {
+            int[] moveTo = predatorFreeSpaces.get(r.nextInt(predatorFreeSpaces.size()));
             newGrid[moveTo[0]][moveTo[1]] = -1;
-            newGrid[x][y] = 0; // Clear old position
-        } else if (newGrid[x][y] == -1) {
-            // No empty space, delete the prey
+            newGrid[x][y] = 0;
+        } 
+        // If no predators, move towards other prey to form groups
+        else if (!preyGroupSpaces.isEmpty()) {
+            int[] moveTo = preyGroupSpaces.get(r.nextInt(preyGroupSpaces.size()));
+            newGrid[moveTo[0]][moveTo[1]] = -1;
             newGrid[x][y] = 0;
         }
-        
-        return newGrid;
+        // If no other options, prey will die
+        else {
+            newGrid[x][y] = 0;
+        }
     }
     
+    return newGrid;
+}
+    
 //    pred movement
-
     /**
      * The predator movement first looks for nearby prey.
      * If looks in a spiral pattern around itself based on the range given.
@@ -321,8 +367,8 @@ public class PredPrey {
     //            pred starves    
         else {
             newGrid[x][y] = 0; 
-
         }
+        
         return newGrid;
     }
     
@@ -348,8 +394,7 @@ public class PredPrey {
                     return new int[] {x2, y2};
                 }
             }
-
-
+            
             for (int i = 1; i < d; i++)
             {
                 int x1 = (predRow - i + grid.length) % grid.length;
@@ -428,72 +473,25 @@ public class PredPrey {
      * @param type, whether this is a predator or prey
      * @return updated grid
      */
-    public static int[][] reproduction(int x, int y, int[][] grid, int type) {
-        Random r = new Random(); 
-        boolean valid = false;
-        boolean[] validMovement = {true, true, true, true};
+    public int[][] reproduction(int x, int y, int[][] grid, int type) {
+//        Directions
+        int[] dRow = {-1, 1, 0, 0};
+        int[] dCol = {0, 0, -1, 1};
+        ArrayList<int[]> openSpots = new ArrayList<>();
         
-        while (!valid) {
-            int direction = r.nextInt(4);
-            switch (direction) {
-//                left
-                case 0:
-//                    if this is an edge case reproduction fails
-                    if (x == 0) {
-                        validMovement[direction] = false;
-                        break;
-                    }
-//                    otherwise if empty reproduce
-                    else if (grid[x-1][y] == 0) {
-                        grid[x-1][y] = type;
-                        valid = true;
-                    } else {
-                        validMovement[direction] = false;
-                    }
-                    break;
-//                    right
-                case 1:
-                    if (x == GRID_X-1) {
-                        validMovement[direction] = false;
-                        break;
-                    }
-                    else if (grid[x+1][y] == 0) {
-                        grid[x+1][y] = type;
-                        valid = true;
-                    } else {
-                        validMovement[direction] = false;
-                    }
-                case 2:
-                    if (y == 0) {
-                        validMovement[direction] = false;
-                        break;
-                    }
-                    else if (grid[x][y-1] == 0) {
-                        grid[x][y-1] = type;
-                        valid = true;
-                    } else {
-                        validMovement[direction] = false;
-                    }
-                    break;
-//                    down
-                case 3:
-                    if (y == GRID_X-1) {
-                        validMovement[direction] = false;
-                        break;
-                    }
-                    else if (grid[x][y+1] == 0) {
-                        grid[x][y+1] = type;
-                        valid = true;
-                    } else {
-                        validMovement[direction] = false;
-                    }
-                    break;
+        for (int i = 0; i < 4; i++) {
+            int newRow = (x + dRow[i] + GRID_X) % GRID_X;
+            int newCol = (y + dCol[i] + GRID_Y) % GRID_Y;
+//            Empty nearby cell
+            if (grid[newRow][newCol] == 0) {
+                openSpots.add(new int[]{newRow, newCol});
             }
-//            starvation when no free spaces
-            if (!validMovement[0] && !validMovement[1] && !validMovement[2] && !validMovement[3]) {
-                grid[x][y] = 0;
-                valid = true;
-            }
+        }
+        
+//        Able to reproduce
+        if (!openSpots.isEmpty()) {
+            int[] spawnAt = openSpots.get(new Random().nextInt(openSpots.size()));
+            grid[spawnAt[0]][spawnAt[1]] = type;
         }
         return grid;
     }
@@ -505,7 +503,7 @@ public class PredPrey {
 //        make and populate grid
         
         PredPrey p = new PredPrey();
-        p.gridSetUp();
+        p.gridSetUp(true);
         
 //        ensure grid not empty
         int numOrganisms = numPrey + numPred;

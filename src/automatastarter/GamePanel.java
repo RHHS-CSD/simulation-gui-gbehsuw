@@ -98,6 +98,11 @@ public class GamePanel extends javax.swing.JPanel implements MouseListener {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseDragged(java.awt.event.MouseEvent evt) {
+                formMouseDragged(evt);
+            }
+        });
         addComponentListener(new java.awt.event.ComponentAdapter() {
             public void componentShown(java.awt.event.ComponentEvent evt) {
                 formComponentShown(evt);
@@ -120,6 +125,18 @@ public class GamePanel extends javax.swing.JPanel implements MouseListener {
 
     }//GEN-LAST:event_formComponentShown
 
+    private void formMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMouseDragged
+        int addType = 0;
+        if (FrameForGame.organismAdd) {
+            addType = 20;
+        } else {
+            addType = -1;
+        }
+        FrameForGame.p.updateGrid(evt.getX(), evt.getY(), this.getWidth(), this.getHeight(), addType);
+//        force redraw again
+        repaint();
+    }//GEN-LAST:event_formMouseDragged
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables
@@ -131,9 +148,15 @@ public class GamePanel extends javax.swing.JPanel implements MouseListener {
      * @param me
      */
     public void mouseClicked(MouseEvent me) {
-        System.out.println("Click: " + me.getX() + ":" + me.getY());
-        FrameForGame.p.updateGrid(me.getX(), me.getY(), this.getWidth(), this.getHeight(), -1);
-
+        int addType = 0;
+        if (FrameForGame.organismAdd) {
+            addType = 20;
+        } else {
+            addType = -1;
+        }
+        FrameForGame.p.updateGrid(me.getX(), me.getY(), this.getWidth(), this.getHeight(), addType);
+//        force redraw again
+        repaint();
     }
 
     /**
@@ -142,7 +165,6 @@ public class GamePanel extends javax.swing.JPanel implements MouseListener {
      * @param me
      */
     public void mousePressed(MouseEvent me) {
-        System.out.println("Press: " + me.getX() + ":" + me.getY());
     }
 
     /**
@@ -151,7 +173,6 @@ public class GamePanel extends javax.swing.JPanel implements MouseListener {
      * @param me
      */
     public void mouseReleased(MouseEvent me) {
-        System.out.println("Release: " + me.getX() + ":" + me.getY());
     }
 
     /**
@@ -160,7 +181,6 @@ public class GamePanel extends javax.swing.JPanel implements MouseListener {
      * @param me
      */
     public void mouseEntered(MouseEvent me) {
-        System.out.println("Enter: " + me.getX() + ":" + me.getY());
     }
 
     /**
@@ -169,7 +189,6 @@ public class GamePanel extends javax.swing.JPanel implements MouseListener {
      * @param me
      */
     public void mouseExited(MouseEvent me) {
-        System.out.println("Exit: " + me.getX() + ":" + me.getY());
     }
 
     /**
