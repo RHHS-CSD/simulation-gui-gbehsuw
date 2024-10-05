@@ -33,17 +33,19 @@ public class IntroPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        GameButton = new javax.swing.JButton();
+        gameButton = new javax.swing.JButton();
         infoButton = new javax.swing.JButton();
 
-        GameButton.setText("Game");
-        GameButton.addActionListener(new java.awt.event.ActionListener() {
+        gameButton.setFont(new java.awt.Font("Poppins", 0, 12)); // NOI18N
+        gameButton.setText("Game");
+        gameButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                GameButtonActionPerformed(evt);
+                gameButtonActionPerformed(evt);
             }
         });
 
-        infoButton.setText("I don't know why I'm here");
+        infoButton.setFont(new java.awt.Font("Poppins", 0, 12)); // NOI18N
+        infoButton.setText("Info");
         infoButton.setToolTipText("");
         infoButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -56,29 +58,26 @@ public class IntroPanel extends javax.swing.JPanel {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addContainerGap(151, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(151, 151, 151)
-                        .addComponent(GameButton))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(99, 99, 99)
-                        .addComponent(infoButton)))
-                .addContainerGap(144, Short.MAX_VALUE))
+                    .addComponent(infoButton)
+                    .addComponent(gameButton))
+                .addContainerGap(184, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(130, 130, 130)
-                .addComponent(GameButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addContainerGap(154, Short.MAX_VALUE)
+                .addComponent(gameButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(infoButton)
-                .addContainerGap(116, Short.MAX_VALUE))
+                .addContainerGap(100, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void GameButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_GameButtonActionPerformed
+    private void gameButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_gameButtonActionPerformed
        switcher.switchToCard(GamePanel.CARD_NAME);
-    }//GEN-LAST:event_GameButtonActionPerformed
+    }//GEN-LAST:event_gameButtonActionPerformed
 
     private void infoButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_infoButtonActionPerformed
         switcher.switchToCard(InfoPanel.CARD_NAME);
@@ -86,7 +85,7 @@ public class IntroPanel extends javax.swing.JPanel {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton GameButton;
+    private javax.swing.JButton gameButton;
     private javax.swing.JButton infoButton;
     // End of variables declaration//GEN-END:variables
 }

@@ -29,8 +29,8 @@ public class PredPrey {
     public static final int PRED_HUNGER_VAL = 20;
     public static final int PRED_REPRODUCE_MIN = 10;
     public static final int PRED_DESPERATION = 4;
-    public static int numPrey = 0;
-    public static int numPred = 0;
+    private static int numPrey = 0;
+    private static int numPred = 0;
     private static final int numPreyStart = 100;
     private static final int numPredStart = 10;
     private static int stepNumber = 0;
@@ -46,6 +46,10 @@ public class PredPrey {
         gridY = newGridY;
         grid = new int[gridX][gridY];
         gridSetUp(false);
+    }
+    
+    public void setStepNumber(int newStep) {
+        stepNumber = newStep;
     }
     
     public int getGridX() {
@@ -64,17 +68,27 @@ public class PredPrey {
         return numPred;
     }
     
+    public int getStepNumber() {
+        return stepNumber;
+    }
+    
 //    initialize grid
     public void gridSetUp(boolean populate) {
         for (int row = 0; row < grid.length; row++) {
             Arrays.fill(grid[row], 0);
         }
+        numPrey = 0;
+        numPred = 0;
         
         
 //        populate grid
         if (populate) {
             numPrey = numPreyStart;
             numPred = numPredStart;
+            if (gridX*gridY < (numPred + numPrey)) {
+                numPred = gridX*gridY / 10;
+                numPrey = gridX*gridY / 5;
+            }
             populatePrey();
             populatePred();
         }
@@ -160,7 +174,7 @@ public class PredPrey {
     
     public void updateGrid(int x, int y, int width, int height, int type) {
         int wInterval = width / grid.length;
-        int hInterval = height / grid[0].length;
+        int hInterval = height / 3 * 2 / grid[0].length;
         int row = x/wInterval;
         int col = y/hInterval;
         
@@ -194,7 +208,7 @@ public class PredPrey {
         numPred = 0;
         
         int wInterval = width / grid.length;
-        int hInterval = height / grid[0].length;
+        int hInterval = height / 3 * 2 / grid[0].length;
 //        nested for loop for each value
         for (int row = 0; row < grid.length; row++) {
             g.setColor(Color.black);
@@ -223,9 +237,8 @@ public class PredPrey {
     }
     
 //    count the number of steps
-    private int step() {
+    public void step() {
         stepNumber++;
-        return stepNumber;
     }
     
 //    overall movement

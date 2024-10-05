@@ -34,25 +34,35 @@ public class EndPanel extends javax.swing.JPanel {
 
         againButton = new javax.swing.JButton();
 
-        againButton.setText("PlayAgain");
+        againButton.setFont(new java.awt.Font("Poppins", 1, 24)); // NOI18N
+        againButton.setText("Play Again");
+        againButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                againButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(156, 156, 156)
+                .addContainerGap(118, Short.MAX_VALUE)
                 .addComponent(againButton)
-                .addContainerGap(165, Short.MAX_VALUE))
+                .addContainerGap(125, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(136, 136, 136)
+                .addContainerGap(126, Short.MAX_VALUE)
                 .addComponent(againButton)
-                .addContainerGap(141, Short.MAX_VALUE))
+                .addContainerGap(130, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void againButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_againButtonActionPerformed
+        switcher.switchToCard(GamePanel.CARD_NAME);
+    }//GEN-LAST:event_againButtonActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -27,8 +27,6 @@ import javax.swing.Action;
 import javax.swing.JPanel;
 import javax.swing.KeyStroke;
 import javax.swing.Timer;
-import automatastarter.FrameForGame;
-import static automatastarter.FrameForGame.organisms;
 
 /**
  *
@@ -37,15 +35,16 @@ import static automatastarter.FrameForGame.organisms;
 public class GamePanel extends javax.swing.JPanel implements MouseListener {
 
     public static final String CARD_NAME = "game";
-    
-    static FrameForGame f = new FrameForGame();
+    static PredPrey p = new PredPrey();
     
 
     CardSwitcher switcher; // This is the parent panel
-    public static Timer animTimer;
+    public Timer animTimer;
     // Image img1 = Toolkit.getDefaultToolkit().getImage("yourFile.jpg");
     BufferedImage img1;
     //variables to control your animation elements
+    boolean organismAdd;
+    int[] organisms = new int[2];
     
 
     /**
@@ -67,6 +66,10 @@ public class GamePanel extends javax.swing.JPanel implements MouseListener {
         //set up the key bindings
         setupKeys();
      
+        //        add radio btns to group and set prey add to true
+        radioGroup.add(preyBtn);
+        radioGroup.add(predBtn);
+        preyBtn.setSelected(true);
 
     }
 
@@ -88,7 +91,7 @@ public class GamePanel extends javax.swing.JPanel implements MouseListener {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        FrameForGame.p.drawGrid(g, this.getWidth(), this.getHeight());
+        p.drawGrid(g, this.getWidth(), this.getHeight());
     }
 
     /**
@@ -100,6 +103,25 @@ public class GamePanel extends javax.swing.JPanel implements MouseListener {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        radioGroup = new javax.swing.ButtonGroup();
+        startBtn = new javax.swing.JButton();
+        stopBtn = new javax.swing.JButton();
+        resetBtn = new javax.swing.JButton();
+        randomize = new javax.swing.JButton();
+        preyBtn = new javax.swing.JRadioButton();
+        predBtn = new javax.swing.JRadioButton();
+        predCount = new javax.swing.JLabel();
+        preyCount = new javax.swing.JLabel();
+        generationLabel = new javax.swing.JLabel();
+        organismAddLabel = new javax.swing.JLabel();
+        speedSlider = new javax.swing.JSlider();
+        gridXSlider = new javax.swing.JSlider();
+        gridYSlider = new javax.swing.JSlider();
+        speedSliderLabel = new javax.swing.JLabel();
+        gridXLabel = new javax.swing.JLabel();
+        gridYLabel = new javax.swing.JLabel();
+
+        setForeground(new java.awt.Color(51, 51, 51));
         addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
             public void mouseDragged(java.awt.event.MouseEvent evt) {
                 formMouseDragged(evt);
@@ -111,15 +133,170 @@ public class GamePanel extends javax.swing.JPanel implements MouseListener {
             }
         });
 
+        startBtn.setFont(new java.awt.Font("Poppins", 1, 12)); // NOI18N
+        startBtn.setText("Start");
+        startBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                startBtnActionPerformed(evt);
+            }
+        });
+
+        stopBtn.setFont(new java.awt.Font("Poppins", 1, 12)); // NOI18N
+        stopBtn.setText("Stop");
+        stopBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                stopBtnActionPerformed(evt);
+            }
+        });
+
+        resetBtn.setFont(new java.awt.Font("Poppins", 1, 12)); // NOI18N
+        resetBtn.setText("Reset");
+        resetBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                resetBtnActionPerformed(evt);
+            }
+        });
+
+        randomize.setFont(new java.awt.Font("Poppins", 1, 12)); // NOI18N
+        randomize.setText("Randomize");
+        randomize.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                randomizeActionPerformed(evt);
+            }
+        });
+
+        preyBtn.setFont(new java.awt.Font("Poppins", 0, 10)); // NOI18N
+        preyBtn.setText("Prey");
+        preyBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                preyBtnActionPerformed(evt);
+            }
+        });
+
+        predBtn.setFont(new java.awt.Font("Poppins", 0, 10)); // NOI18N
+        predBtn.setText("Predator");
+        predBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                predBtnActionPerformed(evt);
+            }
+        });
+
+        predCount.setFont(new java.awt.Font("Poppins", 0, 12)); // NOI18N
+        predCount.setText("Predator: 0");
+
+        preyCount.setFont(new java.awt.Font("Poppins", 0, 12)); // NOI18N
+        preyCount.setText("Prey: 0");
+
+        generationLabel.setFont(new java.awt.Font("Poppins", 0, 12)); // NOI18N
+        generationLabel.setText("Generation: 0");
+
+        organismAddLabel.setFont(new java.awt.Font("Poppins", 1, 12)); // NOI18N
+        organismAddLabel.setText("Add Organism");
+
+        speedSlider.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                speedSliderStateChanged(evt);
+            }
+        });
+
+        gridXSlider.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                gridXSliderStateChanged(evt);
+            }
+        });
+
+        gridYSlider.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                gridYSliderStateChanged(evt);
+            }
+        });
+
+        speedSliderLabel.setFont(new java.awt.Font("Poppins", 1, 12)); // NOI18N
+        speedSliderLabel.setText("Speed");
+
+        gridXLabel.setFont(new java.awt.Font("Poppins", 1, 12)); // NOI18N
+        gridXLabel.setText("X Width");
+
+        gridYLabel.setFont(new java.awt.Font("Poppins", 1, 12)); // NOI18N
+        gridYLabel.setText("Y Width");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 404, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(startBtn)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(stopBtn)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(resetBtn)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(randomize)
+                        .addContainerGap())
+                    .addGroup(layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(gridXLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(gridYLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(speedSliderLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(gridXSlider, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(gridYSlider, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(speedSlider, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 21, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(preyBtn)
+                            .addComponent(organismAddLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(predBtn))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(generationLabel)
+                            .addComponent(preyCount, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(predCount, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 10, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 302, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(255, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(organismAddLabel)
+                            .addComponent(generationLabel))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(preyCount)
+                            .addComponent(preyBtn))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(predCount)
+                            .addComponent(predBtn)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(startBtn)
+                            .addComponent(stopBtn)
+                            .addComponent(resetBtn)
+                            .addComponent(randomize))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(speedSliderLabel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(gridXLabel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(gridYLabel))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(speedSlider, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(gridXSlider, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(gridYSlider, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                .addGap(24, 24, 24))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -129,20 +306,98 @@ public class GamePanel extends javax.swing.JPanel implements MouseListener {
 
     private void formMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMouseDragged
         int addType;
-        if (FrameForGame.organismAdd) {
+        if (organismAdd) {
             addType = 20;
         } else {
             addType = -1;
         }
-        FrameForGame.p.updateGrid(evt.getX(), evt.getY(), this.getWidth(), this.getHeight(), addType);
-
-        f.setOrganismsLabel();
+        p.updateGrid(evt.getX(), evt.getY(), this.getWidth(), this.getHeight(), addType);
+        setLabels();
 //        force redraw again
         repaint();
     }//GEN-LAST:event_formMouseDragged
 
+    private void startBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startBtnActionPerformed
+        animTimer.start();
+    }//GEN-LAST:event_startBtnActionPerformed
+
+    private void stopBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stopBtnActionPerformed
+        animTimer.stop();
+    }//GEN-LAST:event_stopBtnActionPerformed
+
+    private void resetBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetBtnActionPerformed
+        animTimer.restart();
+        animTimer.stop();
+        p.gridSetUp(false);
+        p.setStepNumber(0);
+        setLabels();
+        repaint();
+    }//GEN-LAST:event_resetBtnActionPerformed
+
+    private void randomizeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_randomizeActionPerformed
+        animTimer.restart();
+        animTimer.stop();
+        p.gridSetUp(true);
+        p.setStepNumber(0);
+        setLabels();
+        repaint();
+    }//GEN-LAST:event_randomizeActionPerformed
+
+    private void preyBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_preyBtnActionPerformed
+        organismAdd = false;
+    }//GEN-LAST:event_preyBtnActionPerformed
+
+    private void predBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_predBtnActionPerformed
+        organismAdd = true;
+    }//GEN-LAST:event_predBtnActionPerformed
+
+    private void speedSliderStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_speedSliderStateChanged
+        animTimer.setDelay((100 - speedSlider.getValue())*10 + 10);
+    }//GEN-LAST:event_speedSliderStateChanged
+
+    private void gridXSliderStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_gridXSliderStateChanged
+        animTimer.restart();
+        animTimer.stop();
+        p.setGridX(gridXSlider.getValue() / 2 + 5);
+        p.gridSetUp(false);
+        setLabels();
+        repaint();
+    }//GEN-LAST:event_gridXSliderStateChanged
+
+    private void gridYSliderStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_gridYSliderStateChanged
+        animTimer.restart();
+        animTimer.stop();
+        p.setGridY(gridYSlider.getValue() / 2 + 5);
+        setLabels();
+        repaint();
+    }//GEN-LAST:event_gridYSliderStateChanged
+
+    private void setLabels() {
+        organisms[0] = p.numPrey();
+        organisms[1] = p.numPred();
+        preyCount.setText("Prey: " + organisms[0]);
+        predCount.setText("Pred: " + organisms[1]);
+        generationLabel.setText("Generation: " + p.getStepNumber());
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel generationLabel;
+    private javax.swing.JLabel gridXLabel;
+    private javax.swing.JSlider gridXSlider;
+    private javax.swing.JLabel gridYLabel;
+    private javax.swing.JSlider gridYSlider;
+    private javax.swing.JLabel organismAddLabel;
+    private javax.swing.JRadioButton predBtn;
+    private javax.swing.JLabel predCount;
+    private javax.swing.JRadioButton preyBtn;
+    private javax.swing.JLabel preyCount;
+    private javax.swing.ButtonGroup radioGroup;
+    private javax.swing.JButton randomize;
+    private javax.swing.JButton resetBtn;
+    private javax.swing.JSlider speedSlider;
+    private javax.swing.JLabel speedSliderLabel;
+    private javax.swing.JButton startBtn;
+    private javax.swing.JButton stopBtn;
     // End of variables declaration//GEN-END:variables
 
     /**
@@ -153,14 +408,14 @@ public class GamePanel extends javax.swing.JPanel implements MouseListener {
      */
     public void mouseClicked(MouseEvent me) {
         int addType = 0;
-        if (FrameForGame.organismAdd) {
+        if (organismAdd) {
             addType = 20;
         } else {
             addType = -1;
         }
-        FrameForGame.p.updateGrid(me.getX(), me.getY(), this.getWidth(), this.getHeight(), addType);
+        p.updateGrid(me.getX(), me.getY(), this.getWidth(), this.getHeight(), addType);
         
-        f.setOrganismsLabel();
+        setLabels();
 
 //        force redraw again
         repaint();
@@ -225,9 +480,16 @@ public class GamePanel extends javax.swing.JPanel implements MouseListener {
         public void actionPerformed(ActionEvent ae) {
             //the stuff we want to change every clock tick
 
-            grid = FrameForGame.p.movement();
+            grid = p.movement();
+            p.step();
             
-            f.setOrganismsLabel();
+            setLabels();
+            
+            if ((p.numPred() + p.numPrey()) <= 0) {
+                animTimer.restart();
+                animTimer.stop();
+                switcher.switchToCard(EndPanel.CARD_NAME);
+            }
             
             //force redraw
             repaint();
