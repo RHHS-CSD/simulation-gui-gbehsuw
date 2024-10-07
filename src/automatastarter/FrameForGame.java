@@ -24,6 +24,7 @@ D - Animation Timer - is set up in the Constructor of GamePanel
  */
 package automatastarter;
 
+//import
 import utils.CardSwitcher;
 import java.awt.CardLayout;
 import java.awt.event.ComponentAdapter;

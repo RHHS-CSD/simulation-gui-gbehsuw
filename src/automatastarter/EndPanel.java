@@ -5,6 +5,7 @@
  */
 package automatastarter;
 
+//imports
 import utils.CardSwitcher;
 import javax.swing.JPanel;
 
@@ -14,14 +15,15 @@ import javax.swing.JPanel;
  */
 public class EndPanel extends javax.swing.JPanel {
         public static final String CARD_NAME = "end";
- CardSwitcher switcher;
-    /**
-     * Creates new form EndPanel
-     */
-    public EndPanel(CardSwitcher p) {
-        initComponents();
-        switcher = p;
-    }
+        CardSwitcher switcher;
+        
+       /**
+        * Creates new form EndPanel
+        */
+       public EndPanel(CardSwitcher p) {
+           initComponents();
+           switcher = p;
+       }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -60,6 +62,7 @@ public class EndPanel extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+//    replay button
     private void againButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_againButtonActionPerformed
         switcher.switchToCard(GamePanel.CARD_NAME);
     }//GEN-LAST:event_againButtonActionPerformed

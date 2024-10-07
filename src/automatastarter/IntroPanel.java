@@ -5,8 +5,7 @@
  */
 package automatastarter;
 
-import static automatastarter.GamePanel.p;
-import static automatastarter.PredPrey.grid;
+//imports
 import utils.CardSwitcher;
 import java.awt.CardLayout;
 import java.awt.Graphics;
@@ -24,7 +23,11 @@ import java.awt.image.BufferedImage;
 public class IntroPanel extends javax.swing.JPanel {
     public static final String CARD_NAME = "intro";
     CardSwitcher switcher = null;
+    
+//    variables
     private Timer timer;
+    
+//    img related
     private final int frameWidth = 200;
     private final int frameHeight = 200;
     private final BufferedImage frame0 = ImageUtil.loadAndResizeImage("src/automatastarter/frame_0_delay-0.33s.gif", frameWidth, frameHeight);
@@ -124,18 +127,19 @@ public class IntroPanel extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+//    btn to game
     private void gameButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_gameButtonActionPerformed
         timer.stop();
         timer.restart();
         switcher.switchToCard(GamePanel.CARD_NAME);
     }//GEN-LAST:event_gameButtonActionPerformed
 
+//    btn to info page
     private void infoButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_infoButtonActionPerformed
         timer.stop();
         timer.restart();
         switcher.switchToCard(InfoPanel.CARD_NAME);
     }//GEN-LAST:event_infoButtonActionPerformed
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton gameButton;

@@ -5,6 +5,7 @@
  */
 package automatastarter;
 
+//imports
 import utils.CardSwitcher;
 import java.awt.CardLayout;
 import javax.swing.JPanel;
@@ -33,33 +34,44 @@ public class InfoPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        backButton = new javax.swing.JButton();
+        homeBtn = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         infoDescription = new javax.swing.JTextArea();
+        gameBtn = new javax.swing.JButton();
 
-        backButton.setFont(new java.awt.Font("Poppins", 0, 12)); // NOI18N
-        backButton.setText("Back");
-        backButton.addActionListener(new java.awt.event.ActionListener() {
+        homeBtn.setFont(new java.awt.Font("Poppins", 0, 12)); // NOI18N
+        homeBtn.setText("Back to Home");
+        homeBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                backButtonActionPerformed(evt);
+                homeBtnActionPerformed(evt);
             }
         });
 
         infoDescription.setEditable(false);
         infoDescription.setColumns(20);
-        infoDescription.setFont(new java.awt.Font("Poppins", 0, 12)); // NOI18N
+        infoDescription.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         infoDescription.setLineWrap(true);
         infoDescription.setRows(5);
         infoDescription.setText("Welcome to Predator and Prey! In this game, users can click or drag their mouse to add or remove prey and predators. \n\nPrey can either move away from predators, move towards other prey, or move randomly in that order of priority. Prey can reproduce with a 10percent chance, as long there are open cells. \n\nPredators chase after prey within a range that grows the more hungry they are. They can only reproduce with a 5 percent chance and with hunger levels of 10 or more, where it caps at 20 and they die at 0. Additionallypredators can eat other predators with lower hunger. \n\nOn top of adding or subtraction organisms, users can change the size of the grid, as well as the speed at which the generations occur at.");
         jScrollPane1.setViewportView(infoDescription);
+
+        gameBtn.setFont(new java.awt.Font("Poppins", 0, 12)); // NOI18N
+        gameBtn.setText("Back to Game");
+        gameBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                gameBtnActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(332, 332, 332)
-                .addComponent(backButton)
+                .addGap(230, 230, 230)
+                .addComponent(gameBtn)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(homeBtn)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
@@ -72,18 +84,27 @@ public class InfoPanel extends javax.swing.JPanel {
                 .addContainerGap()
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 254, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(backButton)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(homeBtn)
+                    .addComponent(gameBtn))
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void backButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backButtonActionPerformed
+//    back to the main screen
+    private void homeBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_homeBtnActionPerformed
         switcher.switchToCard(IntroPanel.CARD_NAME);
-    }//GEN-LAST:event_backButtonActionPerformed
+    }//GEN-LAST:event_homeBtnActionPerformed
+
+//    back to game screen
+    private void gameBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_gameBtnActionPerformed
+        switcher.switchToCard(GamePanel.CARD_NAME);
+    }//GEN-LAST:event_gameBtnActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton backButton;
+    private javax.swing.JButton gameBtn;
+    private javax.swing.JButton homeBtn;
     private javax.swing.JTextArea infoDescription;
     private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables

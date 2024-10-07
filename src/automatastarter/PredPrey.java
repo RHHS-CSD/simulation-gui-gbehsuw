@@ -25,7 +25,7 @@ public class PredPrey {
 //    constants / important vars
     private static int gridX = 25;
     private static int gridY = 25;
-    public static int[][] grid = new int[gridX][gridY];
+    private static int[][] grid = new int[gridX][gridY];
     public static final int PREY_REPROD_RATE = 10;
     public static final int PRED_REPROD_RATE = 5;
     public static final int PRED_HUNGER_VAL = 20;
@@ -41,7 +41,7 @@ public class PredPrey {
     private int wInterval;
     private int hInterval;
 
-//    getters/setters
+//    setters
     public void setGridX(int newGridX) {
         gridX = newGridX;
         grid = new int[gridX][gridY];
@@ -68,6 +68,11 @@ public class PredPrey {
         
     }
     
+    public void setGrid(int[][] newGrid) {
+        grid = newGrid;
+    }
+    
+//    getters
     public int getGridX() {
         return gridX;
     }
@@ -88,16 +93,22 @@ public class PredPrey {
         return stepNumber;
     }
     
+    public int[][] getGrid() {
+        return grid;
+    }
+    
 //    initialize grid
     public void gridSetUp(boolean populate) {
         for (int row = 0; row < grid.length; row++) {
             Arrays.fill(grid[row], 0);
         }
+        
+//        reset 
         numPrey = 0;
         numPred = 0;
         
         
-//        populate grid
+//        populate grid if needed
         if (populate) {
             numPrey = numPreyStart;
             numPred = numPredStart;
@@ -159,7 +170,8 @@ public class PredPrey {
         }
     }
     
-    public int printGrid() {
+//    print the grid in console
+    private int printGrid() {
 //        counters
         int nPrey = 0;
         int nPred = 0;
@@ -188,6 +200,15 @@ public class PredPrey {
         return nPred + nPrey;
     }
     
+    /**
+     * On each click on the grid, ensure the click is a valid cell on the grid.
+     * Then proceed to add either a -1 for prey or 20 for pred.
+     * @param x
+     * @param y
+     * @param width
+     * @param height
+     * @param type
+     */
     public void updateGrid(int x, int y, int width, int height, int type) {
         int row = x/wInterval;
         int col = y/hInterval;
@@ -216,11 +237,18 @@ public class PredPrey {
         }
     }
     
+    /**
+     * Loop through the entire grid and then draw the predator or prey image,
+     * based on the value of that cell.
+     * @param g
+     * @param width
+     * @param height
+     * @param gp
+     */
     public void drawGrid(Graphics g, int width, int height, GamePanel gp) {
         //        counters
         numPrey = 0;
         numPred = 0;
-        
 
 //        nested for loop for each value
         for (int row = 0; row < grid.length; row++) {
@@ -243,16 +271,22 @@ public class PredPrey {
                         break;
                 }
             }
-//            enter after each line
         }
     }
     
-//    count the number of steps
+    /**
+     * Increment the generation number
+     */
     public void step() {
         stepNumber++;
     }
     
-//    overall movement
+    /**
+     * The overall movement of the prey and pred. Loop through the grid and either
+     * move the predator or prey. If the prey or pred are lucky, they will reproduce if
+     * applicable. Changes in movement are made in a new grid to avoid affecting other cells.
+     * @return
+     */
     public int[][] movement() {
         Random r = new Random();
 //        first copy grid
@@ -298,8 +332,6 @@ public class PredPrey {
         return grid;
     }
     
-//    prey movement
-
     /**
      * The prey will move away from a predator, towards other nearby prey
      * or towards a random empty space
@@ -433,7 +465,7 @@ public class PredPrey {
         return newGrid;
     }
     
-//prey scanner    
+//prey scanner using a kind of bfs
     private static int[] preyFinder(int[][] grid, int predRow, int predCol, int range) {
 //        spiral arround pred location to scan for prey
         for (int d = 1; d < range; d++)
