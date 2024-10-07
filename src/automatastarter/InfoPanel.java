@@ -34,6 +34,8 @@ public class InfoPanel extends javax.swing.JPanel {
     private void initComponents() {
 
         backButton = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        infoDescription = new javax.swing.JTextArea();
 
         backButton.setFont(new java.awt.Font("Poppins", 0, 12)); // NOI18N
         backButton.setText("Back");
@@ -43,19 +45,33 @@ public class InfoPanel extends javax.swing.JPanel {
             }
         });
 
+        infoDescription.setEditable(false);
+        infoDescription.setColumns(20);
+        infoDescription.setFont(new java.awt.Font("Poppins", 0, 12)); // NOI18N
+        infoDescription.setLineWrap(true);
+        infoDescription.setRows(5);
+        infoDescription.setText("Welcome to Predator and Prey! In this game, users can click or drag their mouse to add or remove prey and predators. \n\nPrey can either move away from predators, move towards other prey, or move randomly in that order of priority. Prey can reproduce with a 10percent chance, as long there are open cells. \n\nPredators chase after prey within a range that grows the more hungry they are. They can only reproduce with a 5 percent chance and with hunger levels of 10 or more, where it caps at 20 and they die at 0. Additionallypredators can eat other predators with lower hunger. \n\nOn top of adding or subtraction organisms, users can change the size of the grid, as well as the speed at which the generations occur at.");
+        jScrollPane1.setViewportView(infoDescription);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(332, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(332, 332, 332)
                 .addComponent(backButton)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane1)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(266, Short.MAX_VALUE)
+                .addContainerGap()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 254, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(backButton)
                 .addContainerGap())
         );
@@ -68,5 +84,7 @@ public class InfoPanel extends javax.swing.JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton backButton;
+    private javax.swing.JTextArea infoDescription;
+    private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
 }

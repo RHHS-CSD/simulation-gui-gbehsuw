@@ -9,13 +9,15 @@ import java.util.Arrays;
 import java.util.Random;
 import java.util.Scanner;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import utils.ImageUtil;
+import automatastarter.FrameForGame;
 
 /**
  *
  * @author mithu
  */
 public class PredPrey {
-    
     /**
      * @param args the command line arguments
      */
@@ -34,6 +36,10 @@ public class PredPrey {
     private static final int numPreyStart = 100;
     private static final int numPredStart = 10;
     private static int stepNumber = 0;
+    private BufferedImage predImg;
+    private BufferedImage preyImg;
+    private int wInterval;
+    private int hInterval;
 
 //    getters/setters
     public void setGridX(int newGridX) {
@@ -50,6 +56,16 @@ public class PredPrey {
     
     public void setStepNumber(int newStep) {
         stepNumber = newStep;
+    }
+    
+    public void setImgs(int width, int height) {
+        wInterval = width / grid.length;
+        hInterval = height / 3 * 2 / grid[0].length;
+        
+//        imgs
+        predImg = ImageUtil.loadAndResizeImage("src/automatastarter/pred.jpg", wInterval, hInterval);
+        preyImg = ImageUtil.loadAndResizeImage("src/automatastarter/prey.jpg", wInterval, hInterval);
+        
     }
     
     public int getGridX() {
@@ -173,13 +189,11 @@ public class PredPrey {
     }
     
     public void updateGrid(int x, int y, int width, int height, int type) {
-        int wInterval = width / grid.length;
-        int hInterval = height / 3 * 2 / grid[0].length;
         int row = x/wInterval;
         int col = y/hInterval;
         
 //        Make sure click is on the grid
-        if (row < grid.length && col < grid[0].length) {
+        if (row < grid.length && col < grid[0].length && row >= 0 && col >= 0) {
 //            update vals
             switch (type) {
                 case -1:
@@ -202,13 +216,12 @@ public class PredPrey {
         }
     }
     
-    public void drawGrid(Graphics g, int width, int height) {
+    public void drawGrid(Graphics g, int width, int height, GamePanel gp) {
         //        counters
         numPrey = 0;
         numPred = 0;
         
-        int wInterval = width / grid.length;
-        int hInterval = height / 3 * 2 / grid[0].length;
+
 //        nested for loop for each value
         for (int row = 0; row < grid.length; row++) {
             g.setColor(Color.black);
@@ -221,13 +234,11 @@ public class PredPrey {
                     case 0:
                         break;
                     case -1:
-                        g.setColor(Color.blue);
-                        g.fillRect(row*wInterval, col*hInterval, wInterval, hInterval);
+                        g.drawImage(preyImg, row*wInterval, col*hInterval, gp);
                         numPrey++;
                         break;
                     default:
-                        g.setColor(Color.red);
-                        g.fillRect(row*wInterval, col*hInterval, wInterval, hInterval);
+                        g.drawImage(predImg, row*wInterval, col*hInterval, gp);
                         numPred++;
                         break;
                 }
