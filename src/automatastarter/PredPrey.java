@@ -11,7 +11,6 @@ import java.util.Scanner;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import utils.ImageUtil;
-import automatastarter.FrameForGame;
 
 /**
  *
@@ -26,20 +25,22 @@ public class PredPrey {
     private static int gridX = 25;
     private static int gridY = 25;
     private static int[][] grid = new int[gridX][gridY];
-    public static final int PREY_REPROD_RATE = 10;
-    public static final int PRED_REPROD_RATE = 5;
-    public static final int PRED_HUNGER_VAL = 20;
-    public static final int PRED_REPRODUCE_MIN = 10;
-    public static final int PRED_DESPERATION = 4;
+    private static int preyReprodRate = 10;
+    private static int predReprodRate = 5;
+    private static int predHungerVal = 20;
     private static int numPrey = 0;
     private static int numPred = 0;
-    private static final int numPreyStart = 100;
-    private static final int numPredStart = 10;
     private static int stepNumber = 0;
     private BufferedImage predImg;
     private BufferedImage preyImg;
     private int wInterval;
     private int hInterval;
+    
+//    constants
+    private static final int NUM_PREY_START = 100;
+    private static final int NUM_PRED_START = 10;
+    private static final int PRED_REPRODUCE_MIN = predHungerVal / 2;
+    private static final int PRED_DESPERATION = 4;
 
 //    setters
     public void setGridX(int newGridX) {
@@ -63,14 +64,27 @@ public class PredPrey {
         hInterval = height / 3 * 2 / grid[0].length;
         
 //        imgs
-        predImg = ImageUtil.loadAndResizeImage("src/automatastarter/pred.jpg", wInterval, hInterval);
-        preyImg = ImageUtil.loadAndResizeImage("src/automatastarter/prey.jpg", wInterval, hInterval);
+        predImg = ImageUtil.loadAndResizeImage("src/automatastarter/images/predator.jpg", wInterval, hInterval);
+        preyImg = ImageUtil.loadAndResizeImage("src/automatastarter/images/prey.jpg", wInterval, hInterval);
         
     }
     
     public void setGrid(int[][] newGrid) {
         grid = newGrid;
     }
+    
+    public void setPreyReprodRate(int rate) {
+        preyReprodRate = rate;
+    }
+    
+    public void setPredReprodRate(int rate) {
+        predReprodRate = rate;
+    }
+    
+    public void setPredHungerVal(int val) {
+        predHungerVal = val;
+    }
+    
     
 //    getters
     public int getGridX() {
@@ -97,7 +111,12 @@ public class PredPrey {
         return grid;
     }
     
-//    initialize grid
+
+    /**
+     * Initialize the grip through filling it with 0s to reset
+     * and adding prey and predators if needed
+     * @param populate
+     */
     public void gridSetUp(boolean populate) {
         for (int row = 0; row < grid.length; row++) {
             Arrays.fill(grid[row], 0);
@@ -110,12 +129,13 @@ public class PredPrey {
         
 //        populate grid if needed
         if (populate) {
-            numPrey = numPreyStart;
-            numPred = numPredStart;
+            numPrey = NUM_PREY_START;
+            numPred = NUM_PRED_START;
             if (gridX*gridY < (numPred + numPrey)) {
                 numPred = gridX*gridY / 10;
                 numPrey = gridX*gridY / 5;
             }
+            
             populatePrey();
             populatePred();
         }
@@ -123,7 +143,7 @@ public class PredPrey {
     
     
 //    return a copy of the 2d int array
-    private static int[][] copyGrid(int [][] grid) {
+    private int[][] copyGrid(int [][] grid) {
         int[][] newGrid = new int[gridX][gridY];
         for (int i = 0; i < newGrid.length; i++) {
             System.arraycopy(grid[i], 0, newGrid[i], 0, gridY);
@@ -163,7 +183,7 @@ public class PredPrey {
                 
 //                make sure cord is empty
                 if (grid[x][y] == 0) {
-                    grid[x][y] = PRED_HUNGER_VAL;
+                    grid[x][y] = predHungerVal;
                     valid = true;
                 }
             }
@@ -212,27 +232,24 @@ public class PredPrey {
     public void updateGrid(int x, int y, int width, int height, int type) {
         int row = x/wInterval;
         int col = y/hInterval;
-        
 //        Make sure click is on the grid
         if (row < grid.length && col < grid[0].length && row >= 0 && col >= 0) {
 //            update vals
-            switch (type) {
-                case -1:
-                    if (grid[row][col] == -1) {
-                        grid[row][col] = 0;
-                    } else {
-                        grid[row][col] = -1;
-                    }
-                    numPrey++;
-                    break;
-                case 20:
-                    if (grid[row][col] > 1) {
-                        grid[row][col] = 0;
-                    } else {
-                        grid[row][col] = 20;
-                    }
-                    numPred++;
-                    break;
+            if (type == -1) {
+                if (grid[row][col] == -1) {
+                    grid[row][col] = 0;
+                } else {
+                    grid[row][col] = -1;
+                }
+                numPrey++;
+            }
+            else if (type > 0){
+                if (grid[row][col] > 1) {
+                    grid[row][col] = 0;
+                } else {
+                    grid[row][col] = predHungerVal;
+                }
+                numPred++;
             }
         }
     }
@@ -300,7 +317,7 @@ public class PredPrey {
                         break;
 //                    if prey use prey movement and update the copied grid
                     case -1:
-                        int numPrey = r.nextInt(100/PREY_REPROD_RATE);
+                        int numPrey = r.nextInt(100/preyReprodRate);
                         if (numPrey == 0) {
                             newGrid = reproduction(row, col, newGrid, -1);
                         }
@@ -309,7 +326,7 @@ public class PredPrey {
                         
 //                        similar case for predator
                     default:
-                        int numPred = r.nextInt(100/PRED_REPROD_RATE);
+                        int numPred = r.nextInt(100/predReprodRate);
 //                        healthy reproductive predator
                         if (numPred == 0 && grid[row][col] > PRED_REPRODUCE_MIN) {
                             newGrid = predMovement(row, col, newGrid);
@@ -448,7 +465,7 @@ public class PredPrey {
 
             // If moving onto a predator, eat it and reset hunger
             if (newGrid[moveTo[0]][moveTo[1]] < hungerLevel && newGrid[moveTo[0]][moveTo[1]] > 0) {
-                newGrid[moveTo[0]][moveTo[1]] = PRED_HUNGER_VAL;
+                newGrid[moveTo[0]][moveTo[1]] = predHungerVal;
             } else {
                 // Move the predator to the new location
                 newGrid[moveTo[0]][moveTo[1]] = hungerLevel - 1;
@@ -542,7 +559,7 @@ public class PredPrey {
 
             // If moving onto a prey, eat it and reset hunger
             if (grid[moveTo[0]][moveTo[1]] == -1) {
-                grid[moveTo[0]][moveTo[1]] = PRED_HUNGER_VAL;
+                grid[moveTo[0]][moveTo[1]] = predHungerVal;
             } else {
                 // Move the predator to the new location
                 grid[moveTo[0]][moveTo[1]] = hungerLevel - 1;

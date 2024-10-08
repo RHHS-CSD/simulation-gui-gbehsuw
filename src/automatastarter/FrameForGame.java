@@ -28,7 +28,6 @@ package automatastarter;
 import utils.CardSwitcher;
 import java.awt.CardLayout;
 import java.awt.event.ComponentAdapter;
-import automatastarter.GamePanel;
 
 /**
  *
@@ -37,8 +36,7 @@ import automatastarter.GamePanel;
 public class FrameForGame extends javax.swing.JFrame implements CardSwitcher {
 
     CardLayout cl;
-    GamePanel gp;
-    
+    GamePanel gp;    
 
     /**
      * Creates new form FrameForGame
@@ -50,7 +48,7 @@ public class FrameForGame extends javax.swing.JFrame implements CardSwitcher {
         cl = new CardLayout();
         cardPanel.setLayout(cl);
 
-        //add 3 panels to the CardLayout
+        //add 4 panels to the CardLayout
         addPanels();
         switchToCard(IntroPanel.CARD_NAME);
 
@@ -72,6 +70,7 @@ public class FrameForGame extends javax.swing.JFrame implements CardSwitcher {
         cardPanel.add(new EndPanel(this),EndPanel.CARD_NAME);
         cardPanel.add(new IntroPanel(this),IntroPanel.CARD_NAME);
         cardPanel.add(new InfoPanel(this),InfoPanel.CARD_NAME);
+        cardPanel.add(new OptionPanel(this),OptionPanel.CARD_NAME);
     }
 
     /**
@@ -150,6 +149,10 @@ public class FrameForGame extends javax.swing.JFrame implements CardSwitcher {
         });
     }
 
+    /**
+     * Switches over to another panel
+     * @param cardName
+     */
     @Override
     public void switchToCard(String cardName) {
         cl.show(cardPanel, cardName);

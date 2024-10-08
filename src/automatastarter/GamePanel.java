@@ -6,25 +6,9 @@
 package automatastarter;
 
 import utils.CardSwitcher;
-import utils.ImageUtil;
-import automatastarter.PredPrey;
 import java.awt.Graphics;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.image.BufferedImage;
-import java.beans.PropertyChangeListener;
-import java.io.File;
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.imageio.ImageIO;
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.JPanel;
-import javax.swing.KeyStroke;
 import javax.swing.Timer;
 
 /**
@@ -40,48 +24,30 @@ public class GamePanel extends javax.swing.JPanel  {
     public Timer animTimer;
     
     //variables for labels
-    boolean organismAdd;
-    int[] organisms = new int[2];
+    private boolean organismAdd;
+    private int[] organisms = new int[2];
     
 
     /**
      * Creates new form GamePanel
+     * @param c
      */
-    public GamePanel(CardSwitcher p) {
+    public GamePanel(CardSwitcher c) {
         initComponents();
         
         this.setFocusable(true);
-
-        // tell the program we want to listen to the mouse
         
         //tells us the panel that controls this one
-        switcher = p;
+        switcher = c;
         
         //create and start a Timer for animation
         animTimer = new Timer(1000, new AnimTimerTick());
 
-        //set up the key bindings
-        setupKeys();
-     
         //        add radio btns to group and set prey add to true
         radioGroup.add(preyBtn);
         radioGroup.add(predBtn);
         preyBtn.setSelected(true);
-    }
-
-    private void setupKeys() {
-        //these lines map a physical key, to a name, and then a name to an 'action'.  You will change the key, name and action to suit your needs
-        this.getInputMap().put(KeyStroke.getKeyStroke("LEFT"), "leftKey");
-        this.getActionMap().put("leftKey", new Move("LEFT"));
-
-        this.getInputMap().put(KeyStroke.getKeyStroke("W"), "wKey");
-        this.getActionMap().put("wKey", new Move("w"));
-
-        this.getInputMap().put(KeyStroke.getKeyStroke("D"), "dKey");
-        this.getActionMap().put("dKey", new Move("d"));
-
-        this.getInputMap().put(KeyStroke.getKeyStroke("X"), "xKey");
-        this.getActionMap().put("xKey", new Move("x"));
+        
     }
     
 //    set the txt for the jLabels
@@ -92,7 +58,6 @@ public class GamePanel extends javax.swing.JPanel  {
         predCount.setText("Pred: " + organisms[1]);
         generationLabel.setText("Generation: " + p.getStepNumber());
     }
-    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -120,7 +85,7 @@ public class GamePanel extends javax.swing.JPanel  {
         speedSliderLabel = new javax.swing.JLabel();
         gridXLabel = new javax.swing.JLabel();
         gridYLabel = new javax.swing.JLabel();
-        infoBtn = new javax.swing.JButton();
+        optionBtn = new javax.swing.JButton();
         jSeparator1 = new javax.swing.JSeparator();
 
         setForeground(new java.awt.Color(51, 51, 51));
@@ -230,11 +195,11 @@ public class GamePanel extends javax.swing.JPanel  {
         gridYLabel.setFont(new java.awt.Font("Poppins", 1, 12)); // NOI18N
         gridYLabel.setText("Y Width");
 
-        infoBtn.setFont(new java.awt.Font("Poppins", 0, 12)); // NOI18N
-        infoBtn.setText("Info");
-        infoBtn.addActionListener(new java.awt.event.ActionListener() {
+        optionBtn.setFont(new java.awt.Font("Poppins", 0, 12)); // NOI18N
+        optionBtn.setText("Options");
+        optionBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                infoBtnActionPerformed(evt);
+                optionBtnActionPerformed(evt);
             }
         });
 
@@ -248,14 +213,14 @@ public class GamePanel extends javax.swing.JPanel  {
                     .addComponent(jSeparator1)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(startBtn)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 47, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 45, Short.MAX_VALUE)
                         .addComponent(stopBtn)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 53, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 51, Short.MAX_VALUE)
                         .addComponent(resetBtn)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 29, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
                         .addComponent(randomize)
                         .addGap(18, 18, Short.MAX_VALUE)
-                        .addComponent(infoBtn))
+                        .addComponent(optionBtn))
                     .addGroup(layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 6, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -301,7 +266,7 @@ public class GamePanel extends javax.swing.JPanel  {
                             .addComponent(gridYSlider, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(infoBtn)
+                            .addComponent(optionBtn)
                             .addComponent(randomize)
                             .addComponent(resetBtn)
                             .addComponent(stopBtn)
@@ -396,6 +361,7 @@ public class GamePanel extends javax.swing.JPanel  {
         animTimer.restart();
         animTimer.stop();
         p.setGridX(gridXSlider.getValue() / 2 + 5);
+        p.setImgs(this.getWidth(), this.getHeight());
         p.gridSetUp(false);
         setLabels();
         repaint();
@@ -406,6 +372,7 @@ public class GamePanel extends javax.swing.JPanel  {
         animTimer.restart();
         animTimer.stop();
         p.setGridY(gridYSlider.getValue() / 2 + 5);
+        p.setImgs(this.getWidth(), this.getHeight());
         setLabels();
         repaint();
     }//GEN-LAST:event_gridYSliderStateChanged
@@ -416,12 +383,12 @@ public class GamePanel extends javax.swing.JPanel  {
     }//GEN-LAST:event_formComponentResized
 
 //    switch to info panel after stopping the timer
-    private void infoBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_infoBtnActionPerformed
+    private void optionBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_optionBtnActionPerformed
         animTimer.restart();
         animTimer.stop();
         p.setStepNumber(0);
-        switcher.switchToCard(InfoPanel.CARD_NAME);
-    }//GEN-LAST:event_infoBtnActionPerformed
+        switcher.switchToCard(OptionPanel.CARD_NAME);
+    }//GEN-LAST:event_optionBtnActionPerformed
 
 //    on mouse clicked
     private void formMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMouseClicked
@@ -445,8 +412,8 @@ public class GamePanel extends javax.swing.JPanel  {
     private javax.swing.JSlider gridXSlider;
     private javax.swing.JLabel gridYLabel;
     private javax.swing.JSlider gridYSlider;
-    private javax.swing.JButton infoBtn;
     private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JButton optionBtn;
     private javax.swing.JLabel organismAddLabel;
     private javax.swing.JRadioButton predBtn;
     private javax.swing.JLabel predCount;
@@ -460,24 +427,6 @@ public class GamePanel extends javax.swing.JPanel  {
     private javax.swing.JButton startBtn;
     private javax.swing.JButton stopBtn;
     // End of variables declaration//GEN-END:variables
-
-    /**
-     * Everything inside here happens when you click on a captured key.
-     */
-    private class Move extends AbstractAction {
-
-        String key;
-
-        public Move(String akey) {
-            key = akey;
-        }
-
-        public void actionPerformed(ActionEvent ae) {
-            
-            
-        }
-
-    }
     
     //    to paint every time
     public void paintComponent(Graphics g) {

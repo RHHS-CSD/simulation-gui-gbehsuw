@@ -7,8 +7,6 @@ package automatastarter;
 
 //imports
 import utils.CardSwitcher;
-import java.awt.CardLayout;
-import javax.swing.JPanel;
 
 /**
  *
@@ -19,6 +17,7 @@ public class InfoPanel extends javax.swing.JPanel {
     CardSwitcher switcher = null;
     /**
      * Creates new form IntroPanel
+     * @param p
      */
     public InfoPanel(CardSwitcher p) {
         initComponents();
@@ -52,7 +51,7 @@ public class InfoPanel extends javax.swing.JPanel {
         infoDescription.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         infoDescription.setLineWrap(true);
         infoDescription.setRows(5);
-        infoDescription.setText("Welcome to Predator and Prey! In this game, users can click or drag their mouse to add or remove prey and predators. \n\nPrey can either move away from predators, move towards other prey, or move randomly in that order of priority. Prey can reproduce with a 10percent chance, as long there are open cells. \n\nPredators chase after prey within a range that grows the more hungry they are. They can only reproduce with a 5 percent chance and with hunger levels of 10 or more, where it caps at 20 and they die at 0. Additionallypredators can eat other predators with lower hunger. \n\nOn top of adding or subtraction organisms, users can change the size of the grid, as well as the speed at which the generations occur at.");
+        infoDescription.setText("Welcome to Predator and Prey! In this game, users can click or drag their mouse to add or remove prey and predators. \n\nPrey can either move away from predators, move towards other prey, or move randomly in that order of priority. Prey can reproduce with a 10percent chance, as long there are open cells. \n\nPredators chase after prey within a range that grows the more hungry they are. They can only reproduce with a 5 percent chance and with hunger levels of 10 or more, where it caps at 20 and they die at 0. Additionallypredators can eat other predators with lower hunger. \n\nOn top of adding or subtraction organisms, users can change the size of the grid, as well as the speed at which the generations occur at all in the control panel!\n\nFor a few more options, head to the options panel, where both the reproduction rates of prey and predators can be changed, along with the maximum level of hunger for predators. The reproduction level at which predators can reproduce is always half their maximum level!");
         jScrollPane1.setViewportView(infoDescription);
 
         gameBtn.setFont(new java.awt.Font("Poppins", 0, 12)); // NOI18N
